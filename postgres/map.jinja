@@ -1,6 +1,7 @@
+{% set postgres_version = salt['pillar.get']('postgres:minor_version', '9.1') %}
 {% set postgres = salt['grains.filter_by']({
     'Debian': {
-        'pkg': 'postgresql-9.1',
+        'pkg': 'postgresql-{0}'.format(postgres_version),
         'python': 'python-pygresql',
         'service': 'postgresql',
     },
