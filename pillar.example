@@ -1,4 +1,5 @@
 postgres:
+  minor_version: 9.3
   pg_hba.conf: salt://postgres/pg_hba.conf
 
   lookup:
