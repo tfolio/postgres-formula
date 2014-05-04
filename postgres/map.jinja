@@ -4,15 +4,18 @@
         'pkg': 'postgresql-{0}'.format(postgres_version),
         'python': 'python-pygresql',
         'service': 'postgresql',
+        'config_dir': '/etc/postgresql/{0}/main'.format(postgres_version),
     },
     'RedHat': {
         'pkg': 'postgresql',
         'python': 'postgresql-python',
         'service': 'postgresql',
+        'config_dir': '/var/lib/pgsql/{0}/data'.format(postgres_version),
     },
     'Arch': {
         'pkg': 'postgresql',
         'python': 'python-psycopg2',
         'service': 'postgresql',
+        'config_dir': '/var/lib/postgres/data',
     },
 }, merge=salt['pillar.get']('postgres:lookup')) %}

@@ -1,2 +1,13 @@
 postgres:
   minor_version: 9.3
+  config_dir: /var/lib/postgres/data # default: distro-specific
+  ssl:
+    disabled: false
+    ciphers: 'DEFAULT:!LOW:!EXP:!MD5:@STRENGTH'
+    cert: '/etc/ssl/certs/ssl-cert-snakeoil.pem'
+    key: '/etc/ssl/private/ssl-cert-snakeoil.key'
+    work_mem: '100MB' # default: depends on total system RAM
+    maintenance_work_mem: 100 # in MB; default: depends on total system RAM
+    checkpoint_segments: 32
+    checkpoint_timeout: 10 # in minutes
+    effective_cache_size: 200 # in MB; default: depends on total system RAM
