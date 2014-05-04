@@ -18,6 +18,14 @@ Available states
 
 Installs the postgresql package.
 
+``postgres.config``
+-------------------
+
+Installs a ``postgresql.conf`` file with defaults based on the config section
+of a tutorial on PostgreSQL (slides_).
+
+.. _slides: http://thebuild.com/presentations/pycon-2014-pppp.pdf
+
 ``postgres.python``
 -------------------
 
