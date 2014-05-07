@@ -1,6 +1,6 @@
 {% from "postgres/map.jinja" import postgres with context %}
 
-{{ pillar.get('postgres:config_dir', postgres.config_dir) }}/postgresql.conf:
+{{ salt['pillar.get']('postgres:config_dir', postgres.config_dir) }}/postgresql.conf:
   file:
     - managed
     - source: salt://postgres/files/postgresql.conf.jinja
