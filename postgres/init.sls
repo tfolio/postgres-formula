@@ -1,4 +1,4 @@
-{% from "postgres/map.jinja" import postgres with context %}
+{% from "postgres/map.jinja" import postgres, postgres_version with context %}
 
 postgresql:
 
@@ -14,7 +14,7 @@ postgresql:
       - pkg: {{ postgres.pkg }}
 
       
-postgresql-server-dev-9.3:
+postgresql-server-dev-{{ postgres_version }}:
   pkg.installed
   
 libpq-dev:
