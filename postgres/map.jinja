@@ -2,6 +2,7 @@
 {% set postgres = salt['grains.filter_by']({
     'Debian': {
         'pkg': 'postgresql-{0}'.format(postgres_version),
+        'pgadmin3': 'pgadmin3',
         'python': 'python-pygresql',
         'service': 'postgresql',
         'pg_hba': '/etc/postgresql/{0}/main/pg_hba.conf'.format(postgres_version),
@@ -9,12 +10,14 @@
     },
     'RedHat': {
         'pkg': 'postgresql',
+        'pgadmin3': 'pgadmin3',
         'python': 'postgresql-python',
         'service': 'postgresql',
         'config_dir': '/var/lib/pgsql/{0}/data'.format(postgres_version),
     },
     'Arch': {
         'pkg': 'postgresql',
+        'pgadmin3': 'pgadmin3',
         'python': 'python-psycopg2',
         'service': 'postgresql',
         'config_dir': '/var/lib/postgres/data',
