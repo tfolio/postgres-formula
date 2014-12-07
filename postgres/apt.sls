@@ -1,4 +1,4 @@
-{% if grains['oscodename'] in ['wheezy', 'squeeze', 'precise', 'lucid'] -%}
+{% if grains['oscodename'] in ['jessie', 'wheezy', 'squeeze', 'precise', 'lucid'] -%}
 pg-{{ grains['oscodename'] }}-repo:
   pkgrepo.managed:
     - humanname: PostgreSQL Apt Repository ({{ grains['oscodename'] }})
