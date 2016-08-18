@@ -210,7 +210,12 @@ wal_buffers = 16MB			# min 32kB, -1 sets based on shared_buffers
 
 # - Checkpoints -
 
+{%- if salt['pillar.get']('postgres:minor_version') >= 9.5 %}
+min_wal_size = 512MB
+max_wal_size = 2GB
+{%- else %}
 checkpoint_segments = {{ salt['pillar.get']('postgres:checkpoint_segments', 32) }}		# in logfile segments, min 1, 16MB each
+{%- endif %}
 checkpoint_timeout = {{ salt['pillar.get']('postgres:checkpoint_timeout', 10) }}min		# range 30s-1h
 checkpoint_completion_target = 0.9	# checkpoint target duration, 0.0 - 1.0
 #checkpoint_warning = 30s		# 0 disables
