@@ -23,35 +23,54 @@ libpq-dev:
 python-dev:
   pkg.installed
 
+{% set pillar_get = salt['pillar.get'] %}
+{%- if grains['saltversioninfo'] >= (0, 17, 0) %}
+{% set runas_param = 'user' %}
+{%- else %}
+{% set runas_param = 'runas' %}
+{%- endif %}
+
 {% if 'users' in pillar.get('postgres', {}) %}
-{% for name, user in salt['pillar.get']('postgres:users').items()  %}
+{% set user_defaults = {
+  'createdb': False,
+  'password': 'changethis',
+  'superuser': False,
+} %}
+{% for name, user in pillar_get('postgres:users').items() %}
 postgres-user-{{ name }}:
   postgres_user.present:
     - name: {{ name }}
-    - createdb: {{ salt['pillar.get']('postgres:users:' + name + ':createdb', False) }}
-    - password: {{ salt['pillar.get']('postgres:users:' + name + ':password', 'changethis') }}
-    - runas: postgres
+{%- for param, default in user_defaults.items() %}
+    - {{ param }}: {{ pillar_get('postgres:users:{}:{}'.format(name, param), default) }}
+{%- endfor %}
+{%- if grains['saltversioninfo'] >= (0, 17, 0) %}
+    - {{ runas_param }}: postgres
     - require:
       - service: {{ postgres.service }}
-{% endfor%}
+{% endfor %}
 {% endif %}
 
 {% if 'databases' in pillar.get('postgres', {}) %}
-{% for name, db in salt['pillar.get']('postgres:databases').items()  %}
+{% set db_defaults = {
+  'encoding': 'UTF8',
+  'lc_ctype': 'en_US.UTF8',
+  'lc_collate': 'en_US.UTF8',
+  'template': 'template0',
+} %}
+{% for name, db in pillar_get('postgres:databases').items()  %}
 postgres-db-{{ name }}:
   postgres_database.present:
     - name: {{ name }}
-    - encoding: {{ salt['pillar.get']('postgres:databases:'+ name +':encoding', 'UTF8') }}
-    - lc_ctype: {{ salt['pillar.get']('postgres:databases:'+ name +':lc_ctype', 'en_US.UTF8') }}
-    - lc_collate: {{ salt['pillar.get']('postgres:databases:'+ name +':lc_collate', 'en_US.UTF8') }}
-    - template: {{ salt['pillar.get']('postgres:databases:'+ name +':template', 'template0') }}
-    {% if salt['pillar.get']('postgres:databases:'+ name +':owner') %}
-    - owner: {{ salt['pillar.get']('postgres:databases:'+ name +':owner') }}
+{%- for param, default in db_defaults.items() %}
+    - {{ param }}: {{ pillar_get('postgres:databases:{}:{}'.format(name, param), default) }}
+{%- endfor %}
+    {% if pillar_get('postgres:databases:'+ name +':owner') %}
+    - owner: {{ pillar_get('postgres:databases:'+ name +':owner') }}
     {% endif %}
-    - runas: {{ salt['pillar.get']('postgres:databases:'+ name +':runas', 'postgres') }}
-    {% if salt['pillar.get']('postgres:databases:'+ name +':user') %}
+    - {{ runas_param }}: {{ pillar_get('postgres:databases:{}:runas'.format(name), 'postgres') }}
+    {% if pillar_get('postgres:databases:'+ name +':user') %}
     - require:
-        - postgres_user: postgres-user-{{ salt['pillar.get']('postgres:databases:'+ name +':user') }}
+      - postgres_user: postgres-user-{{ pillar_get('postgres:databases:'+ name +':user') }}
     {% endif %}
 {% endfor%}
 {% endif %}
