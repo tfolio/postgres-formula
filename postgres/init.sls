@@ -43,7 +43,6 @@ postgres-user-{{ name }}:
 {%- for param, default in user_defaults.items() %}
     - {{ param }}: {{ pillar_get('postgres:users:{}:{}'.format(name, param), default) }}
 {%- endfor %}
-{%- if grains['saltversioninfo'] >= (0, 17, 0) %}
     - {{ runas_param }}: postgres
     - require:
       - service: {{ postgres.service }}
