@@ -24,7 +24,7 @@ python-dev:
   pkg.installed
 
 {% set pillar_get = salt['pillar.get'] %}
-{%- if grains['saltversioninfo'] >= (0, 17, 0) %}
+{%- if grains['saltversioninfo'] >= [0, 17, 0] %}
 {% set runas_param = 'user' %}
 {%- else %}
 {% set runas_param = 'runas' %}
